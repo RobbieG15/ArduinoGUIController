@@ -1,15 +1,13 @@
 # imports
 from tkinter import *
 from tkinter import ttk
-from turtle import clear
 import dataCollectionStorage
-import controller
 
 
 
 # initializing gui
 root = Tk()
-root.geometry('500x500')
+root.geometry('750x750')
 frm = ttk.Frame(root, padding = 10)
 frm.grid()
 
