@@ -38,6 +38,16 @@ def saveAndQuit(pinNum, pinType, pinMode, pinName):
     clearFrame()
     mainMenu()
 
+def showSavedList():
+    presetNamesList = dataCollectionStorage.getPresetNames()
+    clearFrame()
+    header()
+    selectSaved(presetNamesList)
+
+def getPresetToRun(preset):
+    pass
+
+
 
 # gui contents
 def selectNameBoardPort():
@@ -103,6 +113,7 @@ def addPin():
     addButton2 = ttk.Button(frm, text='Add and Quit', command=lambda: saveAndQuit(pinNum.get(), pinType.get(), pinMode.get(), pinName.get()))
     addButton2.grid(column=col+1, row=row+4)
 
+# universal header
 def header():
     # header
     title = ttk.Label(frm, text = 'Arduino I/O Controller')
@@ -111,16 +122,31 @@ def header():
     exitButton = ttk.Button(frm, text="Quit", command=root.destroy)
     exitButton.grid(row=0, column=3, sticky=E)
 
+# main menu screen
 def mainMenu():
     header()
     # new preset button
     newPresetButton = ttk.Button(frm, text="New Preset", command=selectNameBoardPort)
     newPresetButton.grid(row=1, column=0)
+    # view saved presets
+    viewSavedButton = ttk.Button(frm, text="Saved Presets", command=showSavedList)
+    viewSavedButton.grid(row=1, column=1)
 
+# select from saved presets
+def selectSaved(presetNameList):
+    # preset text
+    selectPresetText = ttk.Label(frm, text="Select Preset:")
+    selectPresetText.grid(row=1,column=0)
+    # preset drop down
+    preset = StringVar(root)
+    presetDropDown = OptionMenu(frm, preset, *presetNameList)
+    presetDropDown.grid(row=1, column=1)
+    #confirm
+    confirmPresetButton = ttk.Button(frm, text="Confirm", command=lambda: getPresetToRun(preset.get()))
+    confirmPresetButton.grid(row=1, column=2, sticky=E)
 
 
 
 # running main gui loop
 mainMenu()
 root.mainloop()
-dataCollectionStorage.getPresetNames()

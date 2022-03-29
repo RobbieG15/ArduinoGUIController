@@ -1,4 +1,3 @@
-import readline
 from serial.tools.list_ports import comports
 
 def getPorts():
@@ -11,14 +10,11 @@ def getPorts():
 def getPresetNames():
     with open('presets.txt') as presets:
         presetNameList = []
-        i = 0
-        while i < len(presets.readlines()):
-            if i % 4 == 0:
-                presetNameList.append(presets.readline().strip())
-            else:
-                presets.readline()
-            i+=1
-    print(presetNameList)
+        lines = presets.read().splitlines()
+        for i in lines:
+            if lines.index(i) % 4 == 0:
+                presetNameList.append(i)
+        return presetNameList
 
 
 class Presets:
