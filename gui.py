@@ -3,6 +3,7 @@ from audioop import add
 from tkinter import *
 from tkinter import ttk
 import dataCollectionStorage
+from controller import RunPreset
 
 
 
@@ -25,10 +26,10 @@ def collectBoardAndPort(board, port, presetName):
     header()
     addPin()
 
-def getServos(pinNum, pinType, pinMode, pinName, pinKeybind, lowDegree, highDegree):
+def getServos(pinNum, pinType, pinMode, pinName, lowDegree, highDegree, positiveKeybind, negativeKeybind):
     clearFrame()
     global addBool
-    preset.pins.append((pinName, pinType, pinNum, pinMode, pinKeybind, lowDegree, highDegree))
+    preset.pins.append((pinName, pinType, pinNum, pinMode, lowDegree, highDegree, positiveKeybind, negativeKeybind))
     if addBool == True:
         header()
         addPin()
@@ -36,27 +37,27 @@ def getServos(pinNum, pinType, pinMode, pinName, pinKeybind, lowDegree, highDegr
     else:
         mainMenu()
 
-def saveAndAdd(pinNum, pinType, pinMode, pinName, pinKeybind):
+def saveAndAdd(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind):
     clearFrame()
     global addBool
     addBool = True
     if pinMode == 's':
         header()
-        setServos(pinNum, pinType, pinMode, pinName, pinKeybind)
+        setServos(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind)
     else:
-        preset.pins.append((pinName, pinType, pinNum, pinMode, pinKeybind, 0, 1))
+        preset.pins.append((pinName, pinType, pinNum, pinMode, 0, 1, positiveKeybind, negativeKeybind))
         header()
         addPin()
 
-def saveAndQuit(pinNum, pinType, pinMode, pinName, pinKeybind):
+def saveAndQuit(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind):
     clearFrame()
     global addBool
     addBool = False
     if pinMode == 's':
         header()
-        setServos(pinNum, pinType, pinMode, pinName, pinKeybind)
+        setServos(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind)
     else:
-        preset.pins.append((pinName, pinType, pinNum, pinMode, pinKeybind, 0, 1))
+        preset.pins.append((pinName, pinType, pinNum, pinMode, 0, 1, positiveKeybind, negativeKeybind))
         mainMenu()
     preset.save()
 
@@ -67,7 +68,12 @@ def showSavedList():
     selectSaved(presetNamesList)
 
 def getPresetToRun(preset):
-    pass
+    clearFrame()
+    header()
+    presetPicked = RunPreset()
+    presetPicked.importPreset(preset)
+    #presetPicked.connectBoard()
+    presetPicked.establishPinConnection()
 
 
 
@@ -85,7 +91,7 @@ def selectNameBoardPort():
     presetName = ttk.Entry(frm)
     presetName.grid(row=1, column=3)
     # drop down board type
-    boards = ['Arduino', 'ArduinoMega']
+    boards = dataCollectionStorage.boardTypes
     boardType = StringVar(root)
     boardType.set(boards[0])
     boardText = ttk.Label(frm, text = 'Board Type:')
@@ -130,17 +136,21 @@ def addPin():
     pinMode = StringVar(root)
     pinModeDropDown = OptionMenu(frm, pinMode, *['i', 'o', 'p', 's'])
     pinModeDropDown.grid(column=col+1, row=row+3)
-    pinKeybindText = ttk.Label(frm, text='Pin Keybind:')
-    pinKeybindText.grid(column=col, row=row+4)
-    pinKeybindInput = ttk.Entry(frm)
-    pinKeybindInput.grid(column=col+1, row=row+4)
-    addButton1 = ttk.Button(frm, text='Add and Continue', command=lambda: saveAndAdd(pinNum.get(), pinType.get(), pinMode.get(), pinName.get(), pinKeybindInput.get()))
-    addButton1.grid(column=col, row=row+5)
-    addButton2 = ttk.Button(frm, text='Add and Quit', command=lambda: saveAndQuit(pinNum.get(), pinType.get(), pinMode.get(), pinName.get(), pinKeybindInput.get()))
-    addButton2.grid(column=col+1, row=row+5)
+    pinKeybindLowText = ttk.Label(frm, text='Negative Keybind:')
+    pinKeybindLowText.grid(column=0, row=row+4)
+    pinKeybindLowInput = ttk.Entry(frm)
+    pinKeybindLowInput.grid(column=1, row=row+4)
+    pinKeybindHighText = ttk.Label(frm, text='Positive Keybind:')
+    pinKeybindHighText.grid(column=0, row=row+5)
+    pinKeybindHighInput = ttk.Entry(frm)
+    pinKeybindHighInput.grid(column=1, row=row+5)
+    addButton1 = ttk.Button(frm, text='Add and Continue', command=lambda: saveAndAdd(pinNum.get(), pinType.get(), pinMode.get(), pinName.get(), pinKeybindHighInput.get(), pinKeybindLowInput.get()))
+    addButton1.grid(column=col, row=row+6)
+    addButton2 = ttk.Button(frm, text='Add and Quit', command=lambda: saveAndQuit(pinNum.get(), pinType.get(), pinMode.get(), pinName.get(), pinKeybindHighInput.get(), pinKeybindLowInput.get()))
+    addButton2.grid(column=col+1, row=row+6)
     
 # servo settings
-def setServos(pinNum, pinType, pinMode, pinName, pinKeybind):
+def setServos(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind):
     lowDegreeText = ttk.Label(frm, text="Low Degree")
     lowDegreeText.grid(column=0, row=1)
     lowDegreeInput = ttk.Entry(frm)
@@ -149,7 +159,7 @@ def setServos(pinNum, pinType, pinMode, pinName, pinKeybind):
     highDegreeText.grid(column=0, row=2)
     highDegreeInput = ttk.Entry(frm)
     highDegreeInput.grid(column=1, row=2)
-    doneButton = ttk.Button(frm, text='Done', command=lambda: getServos(pinNum, pinType, pinMode, pinName, pinKeybind, lowDegreeInput.get(), highDegreeInput.get()))
+    doneButton = ttk.Button(frm, text='Done', command=lambda: getServos(pinNum, pinType, pinMode, pinName, int(lowDegreeInput.get()), int(highDegreeInput.get(), positiveKeybind, negativeKeybind)))
     doneButton.grid(column=1, row=3)
 
 # universal header

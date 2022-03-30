@@ -1,5 +1,7 @@
 from serial.tools.list_ports import comports
 
+boardTypes = ['Arduino', 'ArduinoMega', 'ArduinoDue', 'ArduinoNano']
+
 def getPorts():
     portNames = []
     availablePorts = comports()
@@ -36,9 +38,10 @@ class Presets:
             presets.write(f'{self.presetName}\n')
             presets.write(f'{self.board}\n')
             presets.write(f'{self.port}\n')
+            presets.write('[')
             for pin in self.pins:
                 if self.pins.index(pin) == (len(self.pins) - 1):
-                    presets.write(f'{pin}\n')
+                    presets.write(f'{pin}')
                 else:
-                    presets.write(f'{pin},')
-
+                    presets.write(f'{pin},  ')
+            presets.write(']\n')
