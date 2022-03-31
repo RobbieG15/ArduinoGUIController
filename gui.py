@@ -36,6 +36,7 @@ def getServos(pinNum, pinType, pinMode, pinName, lowDegree, highDegree, positive
         addBool = False
     else:
         mainMenu()
+        preset.save()
 
 def saveAndAdd(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind):
     clearFrame()
@@ -58,8 +59,8 @@ def saveAndQuit(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeyb
         setServos(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybind)
     else:
         preset.pins.append((pinName, pinType, pinNum, pinMode, 0, 1, positiveKeybind, negativeKeybind))
+        preset.save()
         mainMenu()
-    preset.save()
 
 def showSavedList():
     presetNamesList = dataCollectionStorage.getPresetNames()
@@ -72,7 +73,7 @@ def getPresetToRun(preset):
     header()
     presetPicked = RunPreset()
     presetPicked.importPreset(preset)
-    #presetPicked.connectBoard()
+    presetPicked.connectBoard()
     presetPicked.establishPinConnection()
 
 
@@ -159,7 +160,7 @@ def setServos(pinNum, pinType, pinMode, pinName, positiveKeybind, negativeKeybin
     highDegreeText.grid(column=0, row=2)
     highDegreeInput = ttk.Entry(frm)
     highDegreeInput.grid(column=1, row=2)
-    doneButton = ttk.Button(frm, text='Done', command=lambda: getServos(pinNum, pinType, pinMode, pinName, int(lowDegreeInput.get()), int(highDegreeInput.get(), positiveKeybind, negativeKeybind)))
+    doneButton = ttk.Button(frm, text='Done', command=lambda: getServos(pinNum, pinType, pinMode, pinName, int(lowDegreeInput.get()), int(highDegreeInput.get()), positiveKeybind, negativeKeybind))
     doneButton.grid(column=1, row=3)
 
 # universal header
