@@ -3,3 +3,5 @@ __pycache__/dataCollectionStorage.cpython-39.pyc
 __pycache__/controller.cpython-38.pyc
 .gitignore
 __pycache__/dataCollectionStorage.cpython-38.pyc
+__pycache__/controller.cpython-310.pyc
+__pycache__/dataCollectionStorage.cpython-310.pyc
