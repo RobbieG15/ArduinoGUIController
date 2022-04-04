@@ -12,6 +12,7 @@ root = Tk()
 root.geometry('750x750')
 frm = ttk.Frame(root, padding = 10)
 frm.grid()
+global presetPicked
 
 # gui functions and variables needed
 def clearFrame():
@@ -69,14 +70,14 @@ def showSavedList():
     selectSaved(presetNamesList)
 
 def getPresetToRun(preset):
+    global presetPicked
     clearFrame()
     header()
     presetPicked = RunPreset()
     presetPicked.importPreset(preset)
     presetPicked.connectBoard()
     presetPicked.establishPinConnection()
-
-
+    root.destroy()
 
 # gui contents
 def selectNameBoardPort():
@@ -195,8 +196,8 @@ def selectSaved(presetNameList):
     confirmPresetButton = ttk.Button(frm, text="Confirm", command=lambda: getPresetToRun(preset.get()))
     confirmPresetButton.grid(row=1, column=2, sticky=E)
 
-
-
 # running main gui loop
 mainMenu()
 root.mainloop()
+if presetPicked != None:
+    presetPicked.operatePreset()

@@ -1,4 +1,5 @@
 from pyfirmata import *
+from pyfirmata import util
 import ast
 from dataCollectionStorage import boardTypes
 import keyboard
@@ -53,18 +54,19 @@ class RunPreset:
         for i, pin in enumerate(self.pins):
             try:
                 if pin[3] == 's':
-                    pins.append([board.get_pin(f'{pin[1]}:{pin[2]}:o'), self.pins[4]])
-                    pins[i].mode = SERVO
+                    pins.append([board.get_pin(f'{pin[1]}:{pin[2]}:o'), pin[4]])
+                    pins[i][0].mode = SERVO
                 else:
                     pins.append([board.get_pin(f'{pin[1]}:{pin[2]}:{pin[3]}'), 0])
                     if pin[3] == 'p':
-                        pin[i].mode = PWM
+                        pins[i][0].mode = PWM
                     elif pin[3] == 'o':
-                        pins[i].mode = OUTPUT
+                        pins[i][0].mode = OUTPUT
                     else:
-                        pins[i].mode = INPUT
+                        pins[i][0].mode = INPUT
                 print(f'Established connection to pin {pin[2]}.')
-            except Exception:
+            except Exception as e:
+                print(e)
                 # TODO: need to handle this case
                 # return to main menu and flash message
                 print(f'Cannot connect to pin {pin[2]}.')
@@ -74,7 +76,8 @@ class RunPreset:
         global pins
         global board
 
-        it = pyfirmata.util.Iterator(board)
+        global it
+        it = util.Iterator(board)
         it.start()
 
         while True:
@@ -82,27 +85,32 @@ class RunPreset:
             for i, pin in enumerate(pins):
                 if event.event_type == keyboard.KEY_DOWN and event.name == self.pins[i][6]:
                     # TODO: add functionality for positive key pressed
-                    if self.pin[i][3] == 's': # Pin is 'Servo'
-                        if pin[1] <= self.pins[i][5]:
+                    if self.pins[i][3] == 's': # Pin is 'Servo'
+                        if pin[1] < self.pins[i][5]:
+                            print("add")
                             pin[1] += 1
                             pin[0].write(pin[1])
-                    elif self.pin[i][3] == 'o': # Pin is Output
+                    elif self.pins[i][3] == 'o': # Pin is Output
                         if pin[1] != 1:
                             pin[0].write(1)
-                    elif self.pin[i][3] == 'i': # Pin is 'Input'
+                    elif self.pins[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
                         pass
                 elif event.event_type == keyboard.KEY_DOWN and event.name == self.pins[i][7]:
                     # TODO: add functionality for negative key pressed
-                    if self.pin[i][3] == 's': # Pin is 'Servo'
-                        if pin[1] >= self.pins[i][4]:
+                    if self.pins[i][3] == 's': # Pin is 'Servo'
+                        if pin[1] > self.pins[i][4]:
+                            print("subtract")
                             pin[1] -= 1
                             pin[0].write(pin[1])
-                    elif self.pin[i][3] == 'o': # Pin is Output
+                    elif self.pins[i][3] == 'o': # Pin is Output
                         if pin[1] != 0:
                             pin[0].write(0)
-                    elif self.pin[i][3] == 'i': # Pin is 'Input'
+                    elif self.pins[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
                         pass
+            if event.event_type == keyboard.KEY_DOWN and event.name == 'p':
+                board.exit()
+                break
