@@ -53,10 +53,10 @@ class RunPreset:
         for i, pin in enumerate(self.pins):
             try:
                 if pin[3] == 's':
-                    pins.append(board.get_pin(f'{pin[1]}:{pin[2]}:o'))
+                    pins.append([board.get_pin(f'{pin[1]}:{pin[2]}:o'), self.pins[4]])
                     pins[i].mode = SERVO
                 else:
-                    pins.append(board.get_pin(f'{pin[1]}:{pin[2]}:{pin[3]}'))
+                    pins.append([board.get_pin(f'{pin[1]}:{pin[2]}:{pin[3]}'), 0])
                     if pin[3] == 'p':
                         pin[i].mode = PWM
                     elif pin[3] == 'o':
@@ -83,11 +83,12 @@ class RunPreset:
                 if event.event_type == keyboard.KEY_DOWN and event.name == self.pins[i][6]:
                     # TODO: add functionality for positive key pressed
                     if self.pin[i][3] == 's': # Pin is 'Servo'
-                        # TODO: add generic step size to current servo position
-                        pass
+                        if pin[1] <= self.pins[i][5]:
+                            pin[1] += 1
+                            pin[0].write(pin[1])
                     elif self.pin[i][3] == 'o': # Pin is Output
-                        # TODO: write a 1 to the output pin to turn on
-                        pass
+                        if pin[1] != 1:
+                            pin[0].write(1)
                     elif self.pin[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
@@ -95,11 +96,12 @@ class RunPreset:
                 elif event.event_type == keyboard.KEY_DOWN and event.name == self.pins[i][7]:
                     # TODO: add functionality for negative key pressed
                     if self.pin[i][3] == 's': # Pin is 'Servo'
-                        # TODO: subtract generic step size to current servo position
-                        pass
+                        if pin[1] >= self.pins[i][4]:
+                            pin[1] -= 1
+                            pin[0].write(pin[1])
                     elif self.pin[i][3] == 'o': # Pin is Output
-                        # TODO: write a 0 to the output pin to turn off
-                        pass
+                        if pin[1] != 0:
+                            pin[0].write(0)
                     elif self.pin[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
