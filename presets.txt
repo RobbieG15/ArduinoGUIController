@@ -6,3 +6,7 @@ test
 Arduino
 COM4
 [('servo1', 'd', 7, 's', 0, 256, 'a', 'd')]
+LED10
+Arduino
+COM4
+[('LED Yellow', 'd', 10, 'o', 0, 1, 'a', 'd')]

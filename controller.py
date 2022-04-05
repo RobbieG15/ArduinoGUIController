@@ -92,7 +92,9 @@ class RunPreset:
                             pin[0].write(pin[1])
                     elif self.pins[i][3] == 'o': # Pin is Output
                         if pin[1] != 1:
-                            pin[0].write(1)
+                            pin[1] = 1
+                            pin[0].write(pin[1])
+                            print(f"Pin {self.pins[i][2]} on.")
                     elif self.pins[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
@@ -106,7 +108,9 @@ class RunPreset:
                             pin[0].write(pin[1])
                     elif self.pins[i][3] == 'o': # Pin is Output
                         if pin[1] != 0:
-                            pin[0].write(0)
+                            pin[1] = 0
+                            pin[0].write(pin[1])
+                            print(f"Pin {self.pins[i][2]} off.")
                     elif self.pins[i][3] == 'i': # Pin is 'Input'
                         pass
                     else: # Pin is 'PWM'
