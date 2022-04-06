@@ -1,0 +1,12 @@
+robotic arm
+Arduino
+COM4
+[('sub arm', 'd', 8, 's', 0, 130, 'w', 's'),  ('main rotate', 'd', 9, 's', 0, 150, 'a', 'd'),  ('main arm', 'd', 10, 's', 0, 10, 'r', 'f')]
+test
+Arduino
+COM4
+[('servo1', 'd', 7, 's', 0, 256, 'a', 'd')]
+LED10
+Arduino
+COM4
+[('LED Yellow', 'd', 10, 'o', 0, 1, 'a', 'd')]
