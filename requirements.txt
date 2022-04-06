@@ -1,0 +1,3 @@
+pySerial==3.5
+keyboard==0.13.5
+pyfirmata==1.1.0

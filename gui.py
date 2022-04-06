@@ -1,5 +1,4 @@
 # imports
-from audioop import add
 from tkinter import *
 from tkinter import ttk
 import dataCollectionStorage
